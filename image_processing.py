@@ -4,6 +4,33 @@ import os
 import numpy as np
 from random import randint
 from image2vector import image_to_vector
+#from scaling_testing import centerlized
+# two function for task 2, centerlized and scalling
+def scalling(s,t):
+    #t = (s - s.mean()) / s.var()
+    # s= source matrix
+    # t = centerized matrix
+    counter = 0
+    for i in range(0, s.shape[0]):
+        counter += 1
+        # print(counter)
+        t[i]  = (s[i] - s[i].mean()) / s[i].var()
+        # print(counter, mean, t[i].mean(), m2.mean())
+        # no need to return because arrays are pass as reference
+
+
+def centerize(s, t):
+    # s= source matrix
+    # t = centerized matrix
+    counter = 0
+    for i in range(0,s.shape[0]):
+        counter += 1
+        #print(counter)
+        mean = (s[i].mean())
+        #m2 = centerlized(s[i]) ## ok
+        t[i] =  mean - s[i]
+        #print(counter, mean, t[i].mean(), m2.mean())
+    # no need to return because arrays are pass as reference
 
 def getImageVectors():
     tsRows = int(400* (20/100) )  #80% pic for training
