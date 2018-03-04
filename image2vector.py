@@ -8,6 +8,7 @@ from PIL import Image
 def image_to_vector(name):
     try:
         img = Image.open(name)
+        img = img.resize((50,50), Image.ANTIALIAS)
         img_array = np.array(img, dtype=np.uint8)
         # img = Image.open('orig.png').convert('RGBA')
         shape = img_array.shape

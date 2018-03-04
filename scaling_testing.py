@@ -25,8 +25,17 @@ def centerlized(vector):
 #X_normalized = preprocessing.normalize(X, norm='l2')
 #print(X_normalized)
 #-----------------
-a = [[1,2], [3,4]]
-a = np.transpose((a))
-x = np.cov(a)
+#a = [[1,2], [3,4]]
+#a = np.transpose((a))
+#x = np.cov(a)
 #print(a)
 #print(x)
+a = np.array([[1, 2], [3, 4]])
+print(a)
+b = np.mean(a, axis=1)
+print("mean", b)
+b = b.reshape(b.shape[0],1)
+print("b", b)
+c = np.array(a - b)
+print(c)
+print(c.mean())

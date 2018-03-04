@@ -19,28 +19,17 @@ def scalling(s,t):
         # no need to return because arrays are pass as reference
 
 
-def centerize(s, t):
-    # s= source matrix
-    # t = centerized matrix
-    counter = 0
-    for i in range(0,s.shape[0]):
-        counter += 1
-        #print(counter)
-        mean = (s[i].mean())
-        #m2 = centerlized(s[i]) ## ok
-        t[i] =  mean - s[i]
-        #print(counter, mean, t[i].mean(), m2.mean())
-    # no need to return because arrays are pass as reference
+def getMeanVector(s):
+    meanVector = np.mean(s, axis=1)
+    meanVector = meanVector.reshape(meanVector.shape[0], 1) # convert 1d rowwise array to column array
+    return meanVector
 
 def getImageVectors():
-    tsRows = int(400* (20/100) )  #80% pic for training
-    trRows = 400 - tsRows   # 20% pic for testing, adding 5 due to int() issue
-    #print(trRows, tsRows)
-    train = np.zeros([trRows,10304]) #80% pic for training
-    test = np.zeros([tsRows,10304])   # 20% pic for testing
+    train = np.zeros([320, 2500]) #80% pic for training
+    test = np.zeros([80,2500])   # 20% pic for testing
     #print(train.shape)
     #print(test.shape)
-    vector = np.zeros(10304)
+    vector = np.zeros(2500)
     trCount = 0
     tsCount = 0
     imgCount = 0
@@ -48,6 +37,7 @@ def getImageVectors():
     for folder, dirs, files in os.walk("./att_faces"):
         for filename in files:
             #print(filename, folder) #9.pgm ./att_faces/s5
+
             shape, vector = image_to_vector(folder+'/' + filename)
             # from each folder take two files and store into testmatrix
             if oldFolder != folder:
@@ -67,7 +57,7 @@ def getImageVectors():
                     tsCount = tsCount + 1
                     #print("tst", imgCount % 10, tsCount)
                 else:
-                    train[trCount][:] = vector
+                    train[trCount][:] = vector.transpose()
                     trCount  = trCount + 1
                 #if imgCount % 10 == 0:
                 #    print(imgCount, trCount,  tsCount, test1, test2)
@@ -75,4 +65,4 @@ def getImageVectors():
         #print(shape)
     #print(train.shape)
     #print(test.shape)
-    return train, test
+    return train.transpose(), test.transpose()

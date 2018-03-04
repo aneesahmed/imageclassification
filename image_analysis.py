@@ -4,31 +4,29 @@ from image_processing import *
 from sklearn import preprocessing
 
 trainMatrix, testMatrix = getImageVectors()
+
 #np.set_printoptions(threshold=np.nan)
-# print("Train Matrix")
-# print(trainMatrix.shape)
-# print(trainMatrix)
-# print('------------------')
-# print("Test Matrix")
-# print(testMatrix.shape)
-# print(testMatrix)
-# print('------------------')
+print("Train Matrix")
+print(trainMatrix.shape)
+print(trainMatrix)
+print('------------------')
+print("Test Matrix")
+print(testMatrix.shape)
+print(testMatrix)
+print('------------------')
 
 ### =================
 ## Image centering and scalling
-centered_matrix = np.zeros(trainMatrix.shape, dtype=float)
-scalled_matrix = np.zeros(trainMatrix.shape, dtype=float)
+centered_matrix_train = np.zeros(trainMatrix.shape, dtype=float)
+centered_matrix_test = np.zeros(testMatrix.shape, dtype=float)
+
 #print(centered_vector)
-centerize(trainMatrix, centered_matrix)
-print(centered_matrix[0].mean(), "centered data", centered_matrix[0],"\n\n" )
-#scalled = preprocessing.scale(trainMatrix)
-#print(scalled[0].mean(), "scalled data", scalled[0])
+meanVector = getMeanVector(trainMatrix)
+print("Mean Vector total Size \n", meanVector.shape)
 
-scalling(centered_matrix, scalled_matrix)
-print(scalled_matrix[0].mean(), "scalled data", scalled_matrix[0],"\n\n")
-
-#centered_vector = preprocessing.scale(trainMatrix)
-#print(centered_vector[0])
-coVar_train = np.cov(scalled_matrix.transpose())
-# 1/(N-1) * Sum (x_i - m)(x_i - m)^T (where m is the mean)
-print(coVar_train[0].mean(), "co variance", coVar_train,"\n\n")
+centered_matrix = trainMatrix - meanVector
+for i in range(0,10):
+    print("Normal Data = ", trainMatrix[i][0], " Centered Data  =", np.round(centered_matrix[i][0],2) ," Mean of Row = ",np.round(meanVector[i][0],2))
+print(" centered Mean ( after rounding to 8 digits) = ", round(centered_matrix.mean(), 8))
+# multiplying X_transpose with X to get surrogate
+surrogate_matrix = np.matmul( centered_matrix.transpose(), centered_matrix )
