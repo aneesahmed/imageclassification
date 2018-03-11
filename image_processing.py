@@ -3,6 +3,7 @@ import random
 import os
 import numpy as np
 from random import randint
+
 from image2vector import image_to_vector
 #from scaling_testing import centerlized
 # two function for task 2, centerlized and scalling
