@@ -1,0 +1,11 @@
+[2018-03-26 16:30:54,835] {test2.py:8} DEBUG - This is a test message
+[2018-03-26 16:30:54,835] {test2.py:10} DEBUG - debug message
+[2018-03-26 16:30:54,835] {test2.py:11} INFO - info message
+[2018-03-26 16:31:41,247] {test2.py:8} DEBUG - This is a test message
+[2018-03-26 16:42:13,250] {HelperFunctions.py:15} DEBUG - (3, 7)
+[{15}  - (3, 7)
+[{20}  - (3, 7)
+[{20}  - []
+[{20}  - []
+[{15}  - (3, 7)
+[{15}  - (3, 7, 3, 7)

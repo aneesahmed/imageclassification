@@ -4,7 +4,7 @@ from numpy import mean
 import numpy as np
 from numpy import linalg as la
 from numpy.linalg import eig
-from image_processing import getMeanVector
+from HelperFunctions import getMeanVector
 np.set_printoptions(linewidth=380)
 # define a matrix
 A = array([[1, 2,1,2,1,2,3,4], [21,22,21,22,21,22,23,24], [31, 32,31,32,31,32,33,34], [41,42,41,42,41,42,43,44],

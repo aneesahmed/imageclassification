@@ -1,37 +1,31 @@
 # coding=utf-8
 import numpy as np
-from image_processing import *
+import HelperFunctions as hf
 from numpy import linalg as la
 from matplotlib import pyplot as plt
 np.set_printoptions(linewidth=380)
-# both matrix are transposed to keep 2500 bits of an image
-# in 320 columns with 1 column per image vector
-# it means a column contain an image
-# for example trainMrix(:, 0) will cotain first image as a vector
-#of the image matrix
-trainMatrix, testMatrix = getImageVectors()
+# for branch rowmatrix-pca-working we are not going to
+# store images into column vector, instead each image will be
+# saved into rows  so there will be 320 * 2500 trainmatrix
+# and 80 * 2500 test matrix
+# m x n = 320 * 2500
+trainMatrix, testMatrix = hf.getImageVectors()
 
 #np.set_printoptions(threshold=np.nan)
 print("Train Matrix")
-print(trainMatrix.shape)
-print(trainMatrix)
-print("Sample Column vector")
-print(trainMatrix[:,0])
+print("shape", trainMatrix.shape)
+print("matrix sample=10", trainMatrix[:10,:])
 print('------------------')
 print("Test Matrix")
-print(testMatrix.shape)
-print(testMatrix)
+print("shape", testMatrix.shape)
+print("matrix sample=10", testMatrix[:10,:])
 print('------------------')
 
 ### =================
  ## Image centering and scalling
-centered_matrix_train = np.zeros(trainMatrix.shape, dtype=float)
-centered_matrix_test = np.zeros(testMatrix.shape, dtype=float)
-
- #print(centered_vector)
- #
- #
-meanVector =  getMeanVector(trainMatrix)
+Xtrain = np.zeros(trainMatrix.shape, dtype=float)
+Xtest = np.zeros(testMatrix.shape, dtype=float)
+meanVector =  hf.getMeanVector(trainMatrix)
 print("Mean Vector  first 10 sample \n", meanVector[:10])
 #1 converting meanvector from single dim row shaped to a column vector
 print("Mean Vector total Size \n", meanVector.shape, "\n", )

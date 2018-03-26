@@ -1,64 +1,73 @@
 # coding=utf-8
 import numpy as np
 import matplotlib.pyplot as plt
-#
-# def linmap(vin,rout):
-#     # function for linear mapping between two ranges
-#     # inputs:
-#     # vin: the input vector you want to map, range [min(vin),max(vin)]
-#     # rout: the range of the resulting vector
-#     # output:
-#     # the resulting vector in range rout
-#     # usage:
-#     # >>> v1 = np.linspace(-2,9,100);
-#     # >>> rin = np.array([-3,5])
-#     # >>> v2 = linmap(v1,rin);
-#     # *** (this function uses numpy module)
-#     #
-#     a = np.amin(vin);
-#     b = np.amax(vin);
-#     c = rout[0];
-#     d = rout[1];
-#     return ((c+d) + (d-c)*((2*vin - (a+b))/(b-a)))/2;
-#
-# # v1 = np.linspace(-2,9,20)
-# # rin = np.array([-3,5])
-# # print(v1)
-# # print("v2")
-# # print( rin)
-# # print("linmap\n")
-# # print(linmap(v1,rin))
-#
-# matrix = np.array([[5,4,3,2,1], [1,2,3,4,5]])
-# print(matrix, matrix.shape)
-# matrix = matrix.transpose()
-# print(matrix, matrix.shape)
-# meanvector = np.mean(matrix, axis=1)
-# print("meanvector\n", meanvector.shape,"\n" ,meanvector)
-# meanvector = meanvector.reshape(meanvector.shape[0], 1)
-# print("meanvector\n", meanvector.shape,"\n" ,meanvector)
-#
-# print(matrix - meanvector )
-#
-# meanvector.sort()
-## print("meanvector\n", meanvector)
-a = np.array([[3,2,1,4,5], [13,12,11,14,5]], dtype=float)
-a = a.T
-a.sort(axis=0)
-print(a)
-print("after reversing")
-a =  a[::-1]
-print(a)
-#tot = sum(a)
+from numpy import linalg as la
+import HelperFunctions as hf
+debug = 1 # debug
+np.set_printoptions(linewidth=380)
+X = np.array([[2,3,2,2,3, 2, 2 ], [5, 5, 7, 12, 12,  12, 12], [5, 9, 9, 9 , 9 ,  10, 10] ], dtype=float)
+if debug: print("X.shape", X.shape)
 
-# var_exp = [(i / tot) for i in a]
-# print(var_exp)
-# idx = np.argsort(a)
-# print(idx, "idx")
-# height = [2,2,2,2,2]
-# plt.bar(np.arange(len(a)), height= var_exp )
-# cum_var_exp = np.cumsum(var_exp)
-# plt.step(np.arange(len(var_exp)), cum_var_exp, where='mid',label='cumulative explained variance')
-# #plt.show()
-#
-# #plt.bar(range(1,14), var_exp, alpha=0.5, align='center',label='individual explained variance')
+if debug: print("X\n", X)
+means = np.mean(X, axis=1)
+var = np.var(X, axis=1)
+if debug: print('mean, var')
+if debug: print(means, var)
+for j, mean in enumerate(means):
+    X[j]= X[j] - mean
+if debug: print("xCenter\n", X)
+# means = np.mean(X, axis=1)
+# var = np.var(X, axis=1)
+# print('mean, var')
+# print(means, var)
+C = []
+m,n = X.shape
+if debug: print("m, n", m,n)
+if debug: print(np.reshape(X[0],(n,1) ).shape)
+tot = 0
+C= np.zeros([n,n])
+for i, x in enumerate(X):
+    x= np.reshape(X[i],(n,1) )
+    #xt= np.reshape(X[i],(1,n) )
+
+    cov = np.array(( np.matmul(x, x.T) ) )
+
+    if debug: print("Cov", cov.shape, np.sum(cov))
+    C = C + cov
+
+if debug: print("C\n", C.shape, "\n", C)
+S  = np.zeros([n,n])
+U, S, V = la.svd(C)
+sortedS = sorted(S, reverse=True)
+sortedS = np.array(sortedS)
+# no S is not in use and data is stored in sortedS
+S =  np.zeros([n,n])
+for i in range(n):
+    S[i,i]= sortedS[i]
+if debug: print("U, S , V")
+if debug: print(U.shape, S. shape, V.shape)
+if debug: print(S)
+sortedU = np.sort(U, axis=0)
+### to reverse
+sortedU = sortedU[::-1]
+if debug: print("sorted u \n", sortedU[:5,:10])
+accuracy = 0
+k = 3
+projectedX = np.zeros(X.shape)
+print("projectedx\n", projectedX)
+hf.project(U,k,X, projectedX)
+for x1, x2 in (zip(projectedX, X)):
+    print("\n", x1,"\n", x2)
+
+#print("norm", norm)
+#print("X2, Xv","\n", projection, "\n", X[0])
+# for k in range(0,n):
+#     norm ,prediction= hf.predict(debug,U,k)
+#     if norm <1:
+#         accuracy= accuracy + 1
+#         break
+
+
+
+
+

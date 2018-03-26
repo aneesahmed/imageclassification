@@ -2,11 +2,33 @@
 import random
 import os
 import numpy as np
+from numpy import linalg as la
 from random import randint
+from   loggingInitializer import logger
 
 from image2vector import image_to_vector
-#from scaling_testing import centerlized
-# two function for task 2, centerlized and scalling
+np.set_printoptions(linewidth=380)
+###################3
+def project(U, k,X, projectedX):
+    reducedU = (U[:, :k])
+    print("reducedU\n", reducedU)
+    for i,x in enumerate(X):
+        Z = np.matmul(reducedU.T,x)
+        print("reducedU\n", reducedU)
+        print("I", i, "Z\n", Z)
+        projectedX[i][:] = np.matmul(reducedU, Z)
+        print("X2\n", projectedX[i], "\n", X[i])
+        distance = projectedX[i] - X[i]
+        #print(projectedX[i],X[i][0], round(distance[0], 14))
+        # print("distance", distance)
+        norm = round(la.norm(distance), 10)
+        print("norm\n", norm)
+
+
+##################33333
+def infoLog(message):
+    logger.debug(message)
+
 def scalling(s,t):
     #t = (s - s.mean()) / s.var()
     # s= source matrix
@@ -22,7 +44,9 @@ def scalling(s,t):
 
 def getMeanVector(s):
     meanVector = np.mean(s, axis=1)
-    meanVector = meanVector.reshape(meanVector.shape[0], 1) # convert 1d rowwise array to column array
+    # for branch rowmatrix-pca-working we are not going to convert it into column vector
+    # instead we are goint to change it
+    #meanVector = meanVector.reshape(meanVector.shape[0], 1) # convert 1d rowwise array to column array
     return meanVector
 
 def getImageVectors():
@@ -66,4 +90,5 @@ def getImageVectors():
         #print(shape)
     #print(train.shape)
     #print(test.shape)
-    return train.transpose(), test.transpose()
+    #return train.transpose(), test.transpose()
+    return train, test
