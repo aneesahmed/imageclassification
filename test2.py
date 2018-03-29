@@ -30,7 +30,7 @@ for i, x in enumerate(X):
     x= np.reshape(X[i],(n,1) )
     #xt= np.reshape(X[i],(1,n) )
 
-    cov = np.array(( np.matmul(x, x.T) ) )
+    cov = np.array(( np.matmul(x.T, x) ) )
 
     if debug: print("Cov", cov.shape, np.sum(cov))
     C = C + cov
@@ -38,26 +38,27 @@ for i, x in enumerate(X):
 if debug: print("C\n", C.shape, "\n", C)
 S  = np.zeros([n,n])
 U, S, V = la.svd(C)
-sortedS = sorted(S, reverse=True)
-sortedS = np.array(sortedS)
+#sortedS = sorted(S, reverse=True)
+#sortedS = np.array(sortedS)
 # no S is not in use and data is stored in sortedS
-S =  np.zeros([n,n])
-for i in range(n):
-    S[i,i]= sortedS[i]
-if debug: print("U, S , V")
-if debug: print(U.shape, S. shape, V.shape)
-if debug: print(S)
-sortedU = np.sort(U, axis=0)
+#S =  np.zeros([n,n])
+#for i in range(n):
+#    S[i,i]= sortedS[i]
+#if debug: print("U, S , V")
+#if debug: print(U.shape, S. shape, V.shape)
+#if debug: print(S)
+#sortedU = np.sort(U, axis=0)
 ### to reverse
-sortedU = sortedU[::-1]
-if debug: print("sorted u \n", sortedU[:5,:10])
+#sortedU = sortedU[::-1]
+#if debug: print("sorted u \n", sortedU[:5,:10])
 accuracy = 0
 k = 3
 projectedX = np.zeros(X.shape)
 print("projectedx\n", projectedX)
-hf.project(U,k,X, projectedX)
+hf.transform(U, k, X, projectedX)
 for x1, x2 in (zip(projectedX, X)):
-    print("\n", x1,"\n", x2)
+
+    print("\n", x1,"\n", x2, "\n", round(sum(x1-x2), 8)  )
 
 #print("norm", norm)
 #print("X2, Xv","\n", projection, "\n", X[0])

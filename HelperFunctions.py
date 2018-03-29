@@ -1,3 +1,6 @@
+import numpy as np
+from numpy import linalg as la
+from random import randint
 # coding=utf-8
 import random
 import os
@@ -8,27 +11,55 @@ from   loggingInitializer import logger
 
 from image2vector import image_to_vector
 np.set_printoptions(linewidth=380)
-###################3
-def project(U, k,X, projectedX):
-    reducedU = (U[:, :k])
-    print("reducedU\n", reducedU)
-    for i,x in enumerate(X):
-        Z = np.matmul(reducedU.T,x)
-        print("reducedU\n", reducedU)
-        print("I", i, "Z\n", Z)
-        projectedX[i][:] = np.matmul(reducedU, Z)
-        print("X2\n", projectedX[i], "\n", X[i])
-        distance = projectedX[i] - X[i]
-        #print(projectedX[i],X[i][0], round(distance[0], 14))
-        # print("distance", distance)
-        norm = round(la.norm(distance), 10)
-        print("norm\n", norm)
 
+######################################3
+def sampleProjection(U,k, Xvector):
+    Z = np.matmul(U[:,:k].T, Xvector)
+    pX =  np.matmul(U[:,:k], Z)
+    # sum = 0
+    # for x1, x2 in zip(Xvector, pX):
+    #     sum = sum + (round(x1 -x2, 8 ) **2)
+    # norm = sum/len(Xvector)
+    # #x3 = x1 -x2
+    norm2 = np.mean(np.exp2( np.round(np.subtract( Xvector, pX ), 8) ) )
+    norm1 = np.mean(np.exp2(Xvector))
+    norm =  norm2/norm1
+    #norm = round(la.norm(distance), 10)
+    return norm, norm2 , pX
+###################
+def findingK(S, requiredVariance):
+    variance = 0
+    k = 0
+    for k in range(10,len(S), 10):
+        variance = np.sum(S[:k])/np.sum(S)
+        if variance >= requiredVariance:
+            break
+
+    return variance, k
+
+##################33333
+def transform(U, k, inputMatrix, outputMatrix):
+    maxnorm = 0
+    reducedU = (U[:, :k])
+    #print("reducedU\n", reducedU)
+    for i,x in enumerate(inputMatrix):
+        Z = np.matmul(reducedU.T,x)
+        outputMatrix[i][:] = np.matmul(reducedU, Z)
+    #return maxnorm
+
+#####################3
+def getNorm(trainVector, testVector):
+    # print("projectedX\n", projectedX[i], "\n", X[i])
+    distance = trainVector - testVector
+     # print("distance", distance)
+    norm = round(la.norm(distance), 10)
+    return norm
 
 ##################33333
 def infoLog(message):
     logger.debug(message)
 
+####################
 def scalling(s,t):
     #t = (s - s.mean()) / s.var()
     # s= source matrix
@@ -40,15 +71,35 @@ def scalling(s,t):
         t[i]  = (s[i] - s[i].mean()) / s[i].var()
         # print(counter, mean, t[i].mean(), m2.mean())
         # no need to return because arrays are pass as reference
+#####################3333
+def getCovariance(X):
+    C = []
+    m, n = X.shape
 
+    #print("m, n", m, n)
+    #print(np.reshape(X[0], (n, 1)).shape)
+    tot = 0
+    C = np.zeros([n, n])
+    for i, x in enumerate(X):
+        x = np.reshape(X[i], (n, 1))
 
-def getMeanVector(s):
-    meanVector = np.mean(s, axis=1)
-    # for branch rowmatrix-pca-working we are not going to convert it into column vector
-    # instead we are goint to change it
-    #meanVector = meanVector.reshape(meanVector.shape[0], 1) # convert 1d rowwise array to column array
-    return meanVector
+        # xt= np.reshape(X[i],(1,n) )
+        #print("x after reshape ", x)
+        cov = np.array((np.matmul(x,x.T)))
+        #cov = np.array((np.matmul(x.T, x)))
+        print("Cov", i, np.sum(cov))
+        C = C + cov
+    return C
 
+###########################33333
+def centered(X):
+    means = np.mean(X, axis=1)
+    #var = np.var(X, axis=1)
+    for j, mean in enumerate(means):
+        X[j] = X[j] - mean
+    return j
+
+#####################33
 def getImageVectors():
     train = np.zeros([320, 2500]) #80% pic for training
     test = np.zeros([80,2500])   # 20% pic for testing
